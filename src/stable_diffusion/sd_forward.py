@@ -15,23 +15,23 @@ beta = 0.1
 # save all noised images
 images = []
 
-image = image.astype(np.float64)
+image = image / 255.0
 # iteration
 for i in range(num_iterations):
     # mean
     mean = np.sqrt(1 - beta) * image
-    # sample based on x0
-    image += np.random.normal(mean, beta, image.shape)
+    # sample
+    image = np.random.normal(mean, beta, image.shape)
     # for show
-    pil_image = Image.fromarray(image.astype('uint8'), 'RGB')
+    show = cv2.cvtColor((image * 255).astype(np.uint8), cv2.COLOR_BGR2RGB)
+    pil_image = Image.fromarray(show, 'RGB')
     images.append(pil_image)
 
 # show image with grid
 show_image = make_image_grid(images, rows=4, cols=4)
-show_image.show()
+show_image.save('../../outputs/maomi.jpg')
 
 sampled_image = image
-print(sampled_image.shape)
 plt.scatter(sampled_image[:, 0], sampled_image[:, 1])
 plt.title('Sampled image')
 plt.show()
